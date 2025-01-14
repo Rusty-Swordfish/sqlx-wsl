@@ -1,5 +1,7 @@
 use sqlx::postgres::PgPoolOptions;
 use dotenv::dotenv;
+mod models;
+use models::User;
 
 #[tokio::main]
 async fn main() -> Result<(), sqlx::Error> {
@@ -12,16 +14,16 @@ async fn main() -> Result<(), sqlx::Error> {
         .await?;
 
     // Insert a user
-    sqlx::query!(
-        "INSERT INTO users (name, email) VALUES ($1, $2)",
-        "John Doe",
-        "john@example.com"
-    )
-    .execute(&pool)
-    .await?;
+    // sqlx::query_as!(User,
+    //     "INSERT INTO users (name, email) VALUES ($1, $2)",
+    //     "Fred Flintstone",
+    //     "fred@example.com"
+    // )
+    // .execute(&pool)
+    // .await?;
 
     // Query users
-    let users = sqlx::query!("SELECT id, name, email FROM users")
+    let users = sqlx::query_as!(User, "SELECT id, name, email FROM users")
         .fetch_all(&pool)
         .await?;
 
